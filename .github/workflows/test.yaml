@@ -27,8 +27,8 @@ jobs:
           aqua_opts: ""
       - run: echo "::set-output name=tfcmt_path::$(aqua which tfcmt)"
         id: tfcmt_path
-      - run: hyperfine "tfcmt -v" "aqua exec -- tfcmt -v" "${{ steps.tfcmt_path.outputs.tfcmt_path }} -v"
-      - run: hyperfine "tfcmt -v" "aqua exec -- tfcmt -v" "${{ steps.tfcmt_path.outputs.tfcmt_path }} -v"
+      - run: hyperfine -N "tfcmt -v" "aqua exec -- tfcmt -v" "${{ steps.tfcmt_path.outputs.tfcmt_path }} -v"
+      - run: hyperfine -N "tfcmt -v" "aqua exec -- tfcmt -v" "${{ steps.tfcmt_path.outputs.tfcmt_path }} -v"
         if: "matrix.aqua_version != 'v1.5.1'"
         env:
           AQUA_EXPERIMENTAL_X_SYS_EXEC: "true"

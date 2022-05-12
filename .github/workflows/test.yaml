@@ -25,12 +25,10 @@ jobs:
         with:
           aqua_version: ${{ matrix.aqua_version }}
           aqua_opts: ""
-      - run: |
-          ab_path="$(aqua which tfcmt)"
-          hyperfine "tfcmt -v" "aqua exec -- tfcmt -v" "$ab_path -v"
-      - run: |
-          ab_path="$(aqua which tfcmt)"
-          hyperfine "tfcmt -v" "aqua exec -- tfcmt -v" "$ab_path -v"
+      - run: echo "::set-output name=tfcmt_path::$(aqua which tfcmt)"
+        id: tfcmt_path
+      - run: hyperfine "tfcmt -v" "aqua exec -- tfcmt -v" "${{ steps.tfcmt_path.outputs.tfcmt_path }} -v"
+      - run: hyperfine "tfcmt -v" "aqua exec -- tfcmt -v" "${{ steps.tfcmt_path.outputs.tfcmt_path }} -v"
         if: "matrix.aqua_version != 'v1.5.1'"
         env:
           AQUA_EXPERIMENTAL_X_SYS_EXEC: "true"

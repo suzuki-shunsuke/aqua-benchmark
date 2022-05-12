@@ -1,0 +1,43 @@
+name: test
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      matrix:
+        runs-on:
+          - ubuntu-latest
+          - macos-latest
+        aqua_version:
+          - v1.5.1
+          - v1.6.0
+    runs-on: ${{ matrix.runs-on }}
+    timeout-minutes: 2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: aquaproj/aqua-installer@v1.0.0
+        with:
+          aqua_version: ${{ matrix.aqua_version }}
+          aqua_opts: ""
+      - run: echo "::set-output name=tfcmt_path::$(aqua which tfcmt)"
+        id: tfcmt_path
+
+      - run: hyperfine --show-output -N --warmup 3 "${{ steps.tfcmt_path.outputs.tfcmt_path }} -v"
+      - run: hyperfine --show-output -N --warmup 3 "aqua exec -- tfcmt -v"
+      - run: hyperfine --show-output -N --warmup 3 "tfcmt -v"
+
+      - run: hyperfine --show-output -N --warmup 3 "${{ steps.tfcmt_path.outputs.tfcmt_path }} -v"
+        env:
+          AQUA_EXPERIMENTAL_X_SYS_EXEC: "true"
+      - run: hyperfine --show-output -N --warmup 3 "aqua exec -- tfcmt -v"
+        env:
+          AQUA_EXPERIMENTAL_X_SYS_EXEC: "true"
+      - run: hyperfine --show-output -N --warmup 3 "tfcmt -v"
+        env:
+          AQUA_EXPERIMENTAL_X_SYS_EXEC: "true"

@@ -1,0 +1,9 @@
+---
+# aqua - Declarative CLI Version Manager
+# https://aquaproj.github.io/
+registries:
+- type: standard
+  ref: v2.14.0 # renovate: depName=aquaproj/aqua-registry
+packages:
+- name: sharkdp/hyperfine@v1.13.0
+- name: suzuki-shunsuke/tfcmt@v3.2.2

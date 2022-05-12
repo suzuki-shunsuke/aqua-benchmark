@@ -15,7 +15,7 @@ jobs:
           - macos-latest
         aqua_version:
           - v1.5.1
-          - v1.6.0-2
+          - v1.6.0
     runs-on: ${{ matrix.runs-on }}
     timeout-minutes: 2
     steps:
